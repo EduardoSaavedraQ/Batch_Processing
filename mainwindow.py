@@ -21,7 +21,7 @@ class MainWindow():
         self.__entryProcessesNumberLabel = tk.Label(self.__header, text="# Procesos", background="#dddddd")
         self.__processesNumberEntry = tk.Entry(self.__header)
         self.__globalTimerLabel = tk.Label(self.__header, text="Reloj Global  " + str(self.__globalTimer), background="#dddddd")
-        self.__generateProcessesButton = tk.Button(self.__header, text="Generar")
+        self.__generateProcessesButton = tk.Button(self.__header, text="Generar", command=self.generateButtonClick)
         self.__entryProcessesNumberLabel.pack(side=tk.LEFT, pady=10)
         self.__processesNumberEntry.pack(side=tk.LEFT, padx=5, pady=10)
         self.__generateProcessesButton.pack(side=tk.LEFT, padx=10)
@@ -36,7 +36,7 @@ class MainWindow():
         self.__processesWaitingOArea.pack(side=tk.LEFT)
 
         self.__processesWaitingLabel = tk.Label(self.__processesWaitingOArea, text="EN ESPERA", background="#dddddd")
-        self.__processesWaitingOutput = tk.Label(self.__processesWaitingOArea, width=22, height=20)
+        self.__processesWaitingOutput = tk.Label(self.__processesWaitingOArea, width=22, height=20, anchor='nw', justify="left")
         self.__missingBatchesLabel = tk.Label(self.__processesWaitingOArea, text="# de Lotes pendientes", background="#dddddd")
         self.__processesWaitingLabel.pack()
         self.__processesWaitingOutput.pack()
@@ -47,7 +47,7 @@ class MainWindow():
         self.__runningProcessOArea.pack(side=tk.LEFT, padx=20)
 
         self.__runningProcessLabel = tk.Label(self.__runningProcessOArea, text="EN EJECUCIÓN", background="#dddddd")
-        self.__runningProcessOutput = tk.Label(self.__runningProcessOArea, width=22, height=10)
+        self.__runningProcessOutput = tk.Label(self.__runningProcessOArea, width=22, height=10, anchor='nw', justify="left")
         self.__runningProcessLabel.pack()
         self.__runningProcessOutput.pack()
 
@@ -56,10 +56,32 @@ class MainWindow():
         self.__finishedProcessesOArea.pack(side=tk.LEFT)
         
         self.__finishedProcessesLabel = tk.Label(self.__finishedProcessesOArea, text="TERMINADOS", background="#dddddd")
-        self.__finishedProcessesOutput = tk.Label(self.__finishedProcessesOArea, width=22, height=20)
-        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados")
+        self.__finishedProcessesOutput = tk.Label(self.__finishedProcessesOArea, width=22, height=20, anchor='nw', justify="left")
+        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados", command=self.changeContentTest)
         self.__finishedProcessesLabel.pack()
         self.__finishedProcessesOutput.pack()
         self.__getResultsButton.pack(pady=10)
 
         self.__window.mainloop()
+
+    def generateButtonClick(self):
+        self.testOutputMPLabel()
+        self.testOutputRPLabel()
+        self.testOutputFPLabel()
+
+        self.__missingBatchesLabel.config(text="# de Lotes pendientes: 1")
+
+    def testOutputMPLabel(self):
+        test = "3. José\n4 + 3\nTME: 6\n\n3 Procesos pendientes"
+        self.__processesWaitingOutput.config(text=test)
+    
+    def testOutputRPLabel(self):
+        test = "2. Carlos\n4 - 2\nTME: 1"
+        self.__runningProcessOutput.config(text=test)
+    
+    def testOutputFPLabel(self):
+        test = "1. Susana\n10 / 2 = 5"
+        self.__finishedProcessesOutput.config(text=test)
+    
+    def changeContentTest(self):
+        self.__runningProcessOutput.config(text="changed")
