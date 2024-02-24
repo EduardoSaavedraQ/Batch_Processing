@@ -42,6 +42,19 @@ class ProcessesGenerator():
         
         return batchs
 
+    @staticmethod
+    def to_txt(filename:str, batchesList:list):
+        with open(filename + '.txt', 'w', encoding='UTF-8') as file:
+            batchNumber = 1
+            
+            for batch in batchesList:
+                file.write("Lote " + str(batchNumber) + "\n")
+                for process in batch:
+                    process = dict(process)
+                    file.write(f"{process['ProcessNumber']}. {process['Name']}\n{process['FirstOperand']} {process['Operand']} {process['SecondOperand']}\nTME: {process['EMT']}\n\n")
+                batchNumber += 1
+
+
 
 if __name__ == "__main__":
     batches = ProcessesGenerator.generateRandomProcesses(8, 5)
@@ -52,3 +65,5 @@ if __name__ == "__main__":
             print(process)
         print("------------------------------------\n")
         i += 1
+
+    ProcessesGenerator.to_txt("datos", batches)
