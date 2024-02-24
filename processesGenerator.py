@@ -5,7 +5,7 @@ class ProcessesGenerator():
     __operators = ['+', '-', '*', '/']
 
     @staticmethod
-    def generateRandomProcesses(processesQuantity:int):
+    def generateRandomProcesses(processesQuantity:int, limitPerBatch:int):
         generatedProcesses = []
         processesGeneratedNumber = 0
 
@@ -21,10 +21,34 @@ class ProcessesGenerator():
 
             processesGeneratedNumber += 1
         
-        return generatedProcesses
+        return ProcessesGenerator.__batchesGenerator(generatedProcesses, limitPerBatch)
+    
+    def __batchesGenerator(generatedProcesses:list, limitPerBatch:int):
+        processesNumber = len(generatedProcesses)
+        batchs = []
+        batch = []
+        position = 0
+
+        while position < processesNumber:
+            batch.append(generatedProcesses[position])
+            position += 1
+
+            if position % limitPerBatch == 0:
+                batchs.append(batch)
+                batch = []
+        
+        if position % limitPerBatch != 0:
+            batchs.append(batch)
+        
+        return batchs
 
 
 if __name__ == "__main__":
-    processes = ProcessesGenerator.generateRandomProcesses(8)
-    for process in processes:
-        print(process)
+    batches = ProcessesGenerator.generateRandomProcesses(8, 5)
+    i = 1
+    for batch in batches:
+        print("Batch #" + str(i) + "\n----------------------------")
+        for process in batch:
+            print(process)
+        print("------------------------------------\n")
+        i += 1
