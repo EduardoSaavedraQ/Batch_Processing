@@ -68,6 +68,16 @@ class Simulator():
 
     def getCurrentProcessStatus(self, batchesList:list):
         return batchesList[self.__currentBatch][self.__currentProcess]
+    
+    def to_txt(self, filename:str):
+        with open(f"{filename}.txt", 'w', encoding='UTF-8') as file:
+            i = 1
+
+            for batch in self.__solutions:
+                file.write(f"Lote {i}\n")
+
+                for process in batch:
+                    file.write(f"\t{process['ProcessNumber']}. {process['Name']}\n\t{process['Operation']}\n\n")
 
 def printCurrentProcessStatus(simulator:Simulator, batchesList:list):
     print(simulator.getCurrentProcessStatus(batchesList))
@@ -76,7 +86,7 @@ def test():
     print("HOLA")
 
 if __name__ == '__main__':
-    from processesGenerator import ProcessesGenerator
+    from processesGenerator import ProcessesGenerator 
 
     batches = ProcessesGenerator.generateRandomProcesses(2, 5)
     ProcessesGenerator.to_txt("datos", batches)
@@ -86,11 +96,4 @@ if __name__ == '__main__':
     simulator.simulateProcesses(batches, printCurrentProcessStatus, (simulator, batches))
 
     solutions = simulator.getSolutions()
-
-    i = 1
-    for batch in solutions:
-        print("Lote" + str(i) + "\n----------------------------")
-        for solution in batch:
-            print(solution)
-        print("------------------------------------\n")
-        i += 1
+    simulator.to_txt("Resultados")
