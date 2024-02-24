@@ -36,7 +36,7 @@ class Simulator():
                         solution = {
                             "ProcessNumber": process["ProcessNumber"],
                             "Name": process["Name"],
-                            "Operation": f"{process['FirstOperand']} {process['Operand']} {process['SecondOperand']} = {Simulator.__getOperation(process)}"
+                            "Operation": f"{process['FirstOperand']} {process['Operator']} {process['SecondOperand']} = {Simulator.__getOperation(process)}"
                         }
 
                         solutionsSubList.append(solution)
@@ -48,13 +48,13 @@ class Simulator():
         self.__ready = True
 
     def __getOperation(process:dict):
-        if process["Operand"] == '+':
+        if process["Operator"] == '+':
             return process["FirstOperand"] + process["SecondOperand"]
-        elif process["Operand"] == '-':
+        elif process["Operator"] == '-':
             return process["FirstOperand"] - process["SecondOperand"]
-        elif process["Operand"] == '*':
+        elif process["Operator"] == '*':
             return process["FirstOperand"] * process["SecondOperand"]
-        elif process["Operand"] == '/':
+        elif process["Operator"] == '/':
             if process["SecondOperand"] == 0:
                 return "NO DEFINIDO"
             else:
@@ -78,7 +78,7 @@ def test():
 if __name__ == '__main__':
     from processesGenerator import ProcessesGenerator
 
-    batches = ProcessesGenerator.generateRandomProcesses(8, 5)
+    batches = ProcessesGenerator.generateRandomProcesses(2, 5)
     ProcessesGenerator.to_txt("datos", batches)
 
     simulator = Simulator()
