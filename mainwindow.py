@@ -64,7 +64,7 @@ class MainWindow():
         self.__finishedProcessesOArea.pack(side=tk.LEFT)
         
         self.__finishedProcessesLabel = tk.Label(self.__finishedProcessesOArea, text="TERMINADOS", background="#dddddd")
-        self.__finishedProcessesOutput = tk.Label(self.__finishedProcessesOArea, width=22, height=20, anchor='nw', justify="left")
+        self.__finishedProcessesOutput = tk.Listbox(self.__finishedProcessesOArea, width=25, height=20)
         self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados", command=self.__printSolutions)
         self.__finishedProcessesLabel.pack()
         self.__finishedProcessesOutput.pack()
@@ -86,7 +86,7 @@ class MainWindow():
         self.__processesNumberEntry.config(state='disabled')
         self.__generateProcessesButton.config(state='disabled')
         self.__getResultsButton.config(state='disabled')
-        self.__finishedProcessesOutput.config(text="")
+        self.__finishedProcessesOutput.delete(0, 'end')
 
         batches = ProcessesGenerator.generateRandomProcesses(numberOfProcess, 5)
         ProcessesGenerator.to_txt(filename="datos", batchesList=batches)
@@ -135,14 +135,15 @@ class MainWindow():
     
     def __showSolutions(self):
         solutions = self.__simulator.getSolutions()
-        output = ""
+        newSolution = solutions[self.__simulator.getCurrentBatchIndex()][-1]
 
-        for batch in solutions:
-            for solution in batch:
-                output += f"{solution['ProcessNumber']}. {solution['Name']}\n"
-                output += f"{solution['Operation']}\n\n"
-                
-        self.__finishedProcessesOutput.config(text=output)
+        output = f"{newSolution['ProcessNumber']}. {newSolution['Name']}\n"
+        output += f"{newSolution['Operation']}\n"
+        
+        output = output.split('\n')
+
+        for line in output:
+            self.__finishedProcessesOutput.insert(tk.END, line)
 
     def __enableEntryAndButtons(self):
         self.__processesNumberEntry.config(state='normal')
