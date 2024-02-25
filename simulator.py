@@ -41,7 +41,7 @@ class Simulator():
     def simulateProcesses(self):
         self.__solutions = []
         i = 0
-        for batch in batches:
+        for batch in self.__batches:
             self.__solutions.append([])
             i += 1
         self.__active = True
@@ -57,7 +57,7 @@ class Simulator():
                         solution = {
                             "ProcessNumber": process["ProcessNumber"],
                             "Name": process["Name"],
-                            "Operation": f"{process['FirstOperand']} {process['Operand']} {process['SecondOperand']} = {Simulator.__getOperation(process)}"
+                            "Operation": f"{process['FirstOperand']} {process['Operator']} {process['SecondOperand']} = {Simulator.__getOperation(process)}"
                         }
                         self.__solutions[self.__currentBatchIndex].append(solution)
                         self.__executeActionsAfterAppendSolution()
@@ -67,17 +67,17 @@ class Simulator():
             self.__currentProcessSubindex = 0
             #self.__solutions.append(solutionsSubList)
         
-        self.__active = True
+        self.__active = False
 
 
     def __getOperation(process:dict):
-        if process["Operand"] == '+':
+        if process["Operator"] == '+':
             return process["FirstOperand"] + process["SecondOperand"]
-        elif process["Operand"] == '-':
+        elif process["Operator"] == '-':
             return process["FirstOperand"] - process["SecondOperand"]
-        elif process["Operand"] == '*':
+        elif process["Operator"] == '*':
             return process["FirstOperand"] * process["SecondOperand"]
-        elif process["Operand"] == '/':
+        elif process["Operator"] == '/':
             if process["SecondOperand"] == 0:
                 return "NO DEFINIDO"
             else:

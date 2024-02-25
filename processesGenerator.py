@@ -14,7 +14,7 @@ class ProcessesGenerator():
                 "ProcessNumber": processesGeneratedNumber + 1,
                 "Name": random.choice(ProcessesGenerator.__names),
                 "FirstOperand": random.randint(0, 10),
-                "Operand": random.choice(ProcessesGenerator.__operators),
+                "Operator": random.choice(ProcessesGenerator.__operators),
                 "SecondOperand": random.randint(0, 10),
                 "EMT": random.randint(5, 12)
             })
@@ -51,12 +51,12 @@ class ProcessesGenerator():
                 file.write("Lote " + str(batchNumber) + "\n")
                 for process in batch:
                     process = dict(process)
-                    file.write(f"{process['ProcessNumber']}. {process['Name']}\n{process['FirstOperand']} {process['Operand']} {process['SecondOperand']}\nTME: {process['EMT']}\n\n")
+                    file.write(f"{process['ProcessNumber']}. {process['Name']}\n{process['FirstOperand']} {process['Operator']} {process['SecondOperand']}\nTME: {process['EMT']}\n\n")
                 batchNumber += 1
 
 
 
-if __name__ == "__main__":
+if __name__ == "__mai__":
     batches = ProcessesGenerator.generateRandomProcesses(8, 5)
     i = 1
     for batch in batches:

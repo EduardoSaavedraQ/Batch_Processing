@@ -1,6 +1,9 @@
 import tkinter as tk
+from tkinter import messagebox
 import time
 import threading
+from processesGenerator import ProcessesGenerator
+from simulator import Simulator
 
 class MainWindow():
     def __init__(self):
@@ -10,9 +13,7 @@ class MainWindow():
         self.__window.minsize(570, 463)
 
         self.__globalTimer = 0
-        self.__timerActive = True
-        self.__idAfter = ''
-
+        self.__simulator = Simulator(1)
 
         #Header area
         self.__header = tk.Frame(self.__window, background="#dddddd")
@@ -21,7 +22,7 @@ class MainWindow():
         self.__entryProcessesNumberLabel = tk.Label(self.__header, text="# Procesos", background="#dddddd")
         self.__processesNumberEntry = tk.Entry(self.__header)
         self.__globalTimerLabel = tk.Label(self.__header, text="Reloj Global  " + str(self.__globalTimer), background="#dddddd")
-        self.__generateProcessesButton = tk.Button(self.__header, text="Generar")
+        self.__generateProcessesButton = tk.Button(self.__header, text="Generar", command=self.__startSimulator)
         self.__entryProcessesNumberLabel.pack(side=tk.LEFT, pady=10)
         self.__processesNumberEntry.pack(side=tk.LEFT, padx=5, pady=10)
         self.__generateProcessesButton.pack(side=tk.LEFT, padx=10)
@@ -63,3 +64,52 @@ class MainWindow():
         self.__getResultsButton.pack(pady=10)
 
         self.__window.mainloop()
+
+    def __startSimulator(self):
+        numberOfProcess = 0
+
+        try:
+            numberOfProcess = int(self.__processesNumberEntry.get())
+            if numberOfProcess <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror(title="Valor de entrada inválido", message="Verifique el valor ingresado.\nÉste debe ser mayor a 0")
+            return
+
+        batches = ProcessesGenerator.generateRandomProcesses(numberOfProcess, 5)
+        ProcessesGenerator.to_txt(filename="datos", batchesList=batches)
+        self.__simulator.setBatches(batches)
+
+        globalTimerThread = threading.Thread(name="Global Timer Thread", target=self.__updateGlobalTimer)
+        simulatorThread = threading.Thread(name="Simulator Thread", target=self.__simulator.simulateProcesses)
+        self.__simulator.addEventListener(event="onStartSimulator", action=globalTimerThread.start)
+        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showRunningProcess)
+        self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
+
+        #self.__simulator.simulateProcesses()
+        simulatorThread.start()
+
+    def __updateGlobalTimer(self):
+        while self.__simulator.getSimulatorStatus():
+            self.__globalTimer += 1
+            self.__globalTimerLabel.config(text=f"Reloj Global {self.__globalTimer}")
+            time.sleep(1)
+    
+    def __showRunningProcess(self):
+        currentProcess = self.__simulator.getCurrentProcess()
+        output = f"{currentProcess['ProcessNumber']}. {currentProcess['Name']}\n"
+        output += f"{currentProcess['FirstOperand']} {currentProcess['Operator']} {currentProcess['SecondOperand']}\n"
+        output += f"TME: {currentProcess['EMT']}"
+
+        self.__runningProcessOutput.config(text=output)
+    
+    def __showSolutions(self):
+        solutions = self.__simulator.getSolutions()
+        output = ""
+
+        for batch in solutions:
+            for solution in batch:
+                output += f"{solution['ProcessNumber']}. {solution['Name']}\n"
+                output += f"{solution['Operation']}\n\n"
+                
+        self.__finishedProcessesOutput.config(text=output)
