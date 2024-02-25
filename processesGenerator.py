@@ -44,14 +44,16 @@ class ProcessesGenerator():
 
     @staticmethod
     def to_txt(filename:str, batchesList:list):
-        with open(filename + '.txt', 'w', encoding='UTF-8') as file:
+        with open(f"{filename}.txt", 'w', encoding='UTF-8') as file:
             batchNumber = 1
-            
             for batch in batchesList:
-                file.write("Lote " + str(batchNumber) + "\n")
+                file.write(f"Lote {batchNumber}\n\n")
                 for process in batch:
                     process = dict(process)
-                    file.write(f"{process['ProcessNumber']}. {process['Name']}\n{process['FirstOperand']} {process['Operator']} {process['SecondOperand']}\nTME: {process['EMT']}\n\n")
+                    output = f"\t{process['ProcessNumber']}. {process['Name']}\n"
+                    output += f"\t{process['FirstOperand']} {process['Operator']} {process['SecondOperand']}\n"
+                    output += f"\tTME: {process['EMT']}\n\n"
+                    file.write(output)
                 batchNumber += 1
 
 
