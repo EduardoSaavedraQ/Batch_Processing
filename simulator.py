@@ -87,7 +87,6 @@ class Simulator():
         
         self.__active = False
         self.__executeActionsAfterFinishingSimulation()
-        print("Simulación terminada")
 
     def __getOperation(process:dict):
         if process["Operator"] == '+':
@@ -122,6 +121,17 @@ class Simulator():
     
     def getBatchesAmount(self):
         return len(self.__batches)
+
+    def to_txt(self, filename:str):
+        batchNumber = 1
+        with open(f"{filename}.txt", 'w', encoding='UTF-8') as file:
+            for batch in self.__solutions:
+                file.write(f"Lote {batchNumber} \n\n")
+                for solution in batch:
+                    output = f"\t{solution['ProcessNumber']}. {solution['Name']}\n"
+                    output += f"\t{solution['Operation']}\n\n"
+                    file.write(output)
+                batchNumber += 1
 
 def greeting():
     print("Hola")

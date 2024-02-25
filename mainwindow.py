@@ -65,7 +65,7 @@ class MainWindow():
         
         self.__finishedProcessesLabel = tk.Label(self.__finishedProcessesOArea, text="TERMINADOS", background="#dddddd")
         self.__finishedProcessesOutput = tk.Label(self.__finishedProcessesOArea, width=22, height=20, anchor='nw', justify="left")
-        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados")
+        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados", command=self.__printSolutions)
         self.__finishedProcessesLabel.pack()
         self.__finishedProcessesOutput.pack()
         self.__getResultsButton.pack(pady=10)
@@ -95,8 +95,6 @@ class MainWindow():
         self.__globalTimerThread = threading.Thread(name="Global Timer Thread", target=self.__updateGlobalTimer)
         self.__simulator.addEventListener(event="onStartSimulator", action=self.__globalTimerThread.start)
         simulatorThread = threading.Thread(name="Simulator Thread", target=self.__simulator.simulateProcesses)
-
-        #self.__simulator.simulateProcesses()
         simulatorThread.start()
 
     def __updateGlobalTimer(self):
@@ -145,8 +143,12 @@ class MainWindow():
                 output += f"{solution['Operation']}\n\n"
                 
         self.__finishedProcessesOutput.config(text=output)
-    
+
     def __enableEntryAndButtons(self):
         self.__processesNumberEntry.config(state='normal')
         self.__generateProcessesButton.config(state='active')
         self.__getResultsButton.config(state='active')
+
+    def __printSolutions(self):
+        self.__simulator.to_txt(filename="resultados")
+        messagebox.showinfo(title="Archivo creado", message="Ya puede encontrar el archivo en la ruta especificada.")
