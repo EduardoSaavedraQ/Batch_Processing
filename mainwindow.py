@@ -76,6 +76,11 @@ class MainWindow():
             messagebox.showerror(title="Valor de entrada inválido", message="Verifique el valor ingresado.\nÉste debe ser mayor a 0")
             return
 
+        self.__processesNumberEntry.config(state='disabled')
+        self.__generateProcessesButton.config(state='disabled')
+        self.__getResultsButton.config(state='disabled')
+        self.__finishedProcessesOutput.config(text="")
+
         batches = ProcessesGenerator.generateRandomProcesses(numberOfProcess, 5)
         ProcessesGenerator.to_txt(filename="datos", batchesList=batches)
         self.__simulator.setBatches(batches)
@@ -86,6 +91,7 @@ class MainWindow():
         self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showRunningProcess)
         self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
         self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showProcessesWaiting)
+        self.__simulator.addEventListener(event='onFinishSimulation', action=self.__enableEntryAndButtons)
 
         #self.__simulator.simulateProcesses()
         simulatorThread.start()
@@ -134,3 +140,8 @@ class MainWindow():
                 output += f"{solution['Operation']}\n\n"
                 
         self.__finishedProcessesOutput.config(text=output)
+    
+    def __enableEntryAndButtons(self):
+        self.__processesNumberEntry.config(state='normal')
+        self.__generateProcessesButton.config(state='active')
+        self.__getResultsButton.config(state='active')

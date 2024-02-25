@@ -11,6 +11,7 @@ class Simulator():
         self.__actionsAfterStartSimulator = []
         self.__actionsAfterUpdateEMT = []
         self.__actionsAfterAppendSolution = []
+        self.__actionsAfterFinishingSimulation = []
 
     def setBatches(self, batches:list):
         self.__batches = batches
@@ -22,6 +23,8 @@ class Simulator():
             self.__actionsAfterUpdateEMT.append(action)
         elif event == "onAppendSolution":
             self.__actionsAfterAppendSolution.append(action)
+        elif event == "onFinishSimulation":
+            self.__actionsAfterFinishingSimulation.append(action)
     
     def __executeActionsAfterStartSimulator(self):
         for action in self.__actionsAfterStartSimulator:
@@ -35,6 +38,10 @@ class Simulator():
         for action in self.__actionsAfterAppendSolution:
             action()
     
+    def __executeActionsAfterFinishingSimulation(self):
+        for action in self.__actionsAfterFinishingSimulation:
+            action()
+    
     def setTBC(self, tbc=1):
         self.__tbc = tbc
 
@@ -44,6 +51,7 @@ class Simulator():
         for batch in self.__batches:
             self.__solutions.append([])
             i += 1
+        self.__currentBatchIndex = 0
         self.__active = True
         self.__executeActionsAfterStartSimulator()
         for batch in self.__batches:
@@ -68,6 +76,7 @@ class Simulator():
             #self.__solutions.append(solutionsSubList)
         
         self.__active = False
+        self.__executeActionsAfterFinishingSimulation()
 
 
     def __getOperation(process:dict):
