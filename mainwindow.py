@@ -14,6 +14,13 @@ class MainWindow():
 
         self.__globalTimer = 0
         self.__simulator = Simulator(1)
+        self.__globalTimerThread = None
+        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showRunningProcess)
+        self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
+        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showProcessesWaiting)
+        self.__simulator.addEventListener(event='onFinishSimulation', action=self.__enableEntryAndButtons)
+        self.__simulator.addEventListener(event='onFinishSimulation', action=lambda:self.__runningProcessOutput.config(text=""))
+        self.__simulator.addEventListener(event='onFinishSimulation', action=lambda: self.__simulator.removeActionAfterStartSimulation(self.__globalTimerThread.start))
 
         #Header area
         self.__header = tk.Frame(self.__window, background="#dddddd")
@@ -85,20 +92,16 @@ class MainWindow():
         ProcessesGenerator.to_txt(filename="datos", batchesList=batches)
         self.__simulator.setBatches(batches)
 
-        globalTimerThread = threading.Thread(name="Global Timer Thread", target=self.__updateGlobalTimer)
+        self.__globalTimerThread = threading.Thread(name="Global Timer Thread", target=self.__updateGlobalTimer)
+        self.__simulator.addEventListener(event="onStartSimulator", action=self.__globalTimerThread.start)
         simulatorThread = threading.Thread(name="Simulator Thread", target=self.__simulator.simulateProcesses)
-        self.__simulator.addEventListener(event="onStartSimulator", action=globalTimerThread.start)
-        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showRunningProcess)
-        self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
-        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showProcessesWaiting)
-        self.__simulator.addEventListener(event='onFinishSimulation', action=self.__enableEntryAndButtons)
-        self.__simulator.addEventListener(event='onFinishSimulation', action=lambda:self.__runningProcessOutput.config(text=""))
-
 
         #self.__simulator.simulateProcesses()
         simulatorThread.start()
 
     def __updateGlobalTimer(self):
+        self.__globalTimer = 0
+        self.__globalTimerLabel.config(text=f"Reloj Global {self.__globalTimer}")
         while self.__simulator.getSimulatorStatus():
             self.__globalTimer += 1
             self.__globalTimerLabel.config(text=f"Reloj Global {self.__globalTimer}")

@@ -41,7 +41,19 @@ class Simulator():
     def __executeActionsAfterFinishingSimulation(self):
         for action in self.__actionsAfterFinishingSimulation:
             action()
+
+    def removeActionAfterStartSimulation(self, action):
+        self.__actionsAfterStartSimulator.remove(action)
+
+    def removeActionAfterUpdateEMT(self, action):
+        self.__actionsAfterUpdateEMT.remove(action)
     
+    def removeActionAfterAppendSolution(self, action):
+        self.__actionsAfterAppendSolution.remove(action)
+    
+    def removeActionAfterFinishingSimulation(self, action):
+        self.__actionsAfterFinishingSimulation.remove(action)
+
     def setTBC(self, tbc=1):
         self.__tbc = tbc
 
@@ -57,7 +69,6 @@ class Simulator():
         for batch in self.__batches:
             for process in batch:
                 while process["EMT"] > 0:
-                    #print(process)
                     process["EMT"] -= 1
                     self.__executeActionsAfterUpdateEMT()
                     time.sleep(self.__tbc)
@@ -71,13 +82,12 @@ class Simulator():
                         self.__solutions[self.__currentBatchIndex].append(solution)
                         self.__executeActionsAfterAppendSolution()
                         self.__currentProcessSubindex += 1
-                        #solutionsSubList.append(solution)
             self.__currentBatchIndex += 1
             self.__currentProcessSubindex = 0
-            #self.__solutions.append(solutionsSubList)
         
         self.__active = False
         self.__executeActionsAfterFinishingSimulation()
+        print("Simulación terminada")
 
     def __getOperation(process:dict):
         if process["Operator"] == '+':
