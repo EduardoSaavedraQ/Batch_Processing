@@ -56,7 +56,7 @@ class ProcessesGenerator():
 
 
 
-if __name__ == "__main__":
+if __name__ == "__mai__":
     batches = ProcessesGenerator.generateRandomProcesses(8, 5)
     i = 1
     for batch in batches:
