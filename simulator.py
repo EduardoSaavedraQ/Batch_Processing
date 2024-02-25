@@ -91,6 +91,18 @@ class Simulator():
     
     def getCurrentProcess(self):
         return self.__batches[self.__currentBatchIndex][self.__currentProcessSubindex]
+    
+    def getCurrentBatchIndex(self):
+        return self.__currentBatchIndex
+    
+    def getCurrentProcessSubindex(self):
+        return self.__currentProcessSubindex
+    
+    def getBatch(self, batchIndex:int):
+        return self.__batches[batchIndex]
+    
+    def getBatchesAmount(self):
+        return len(self.__batches)
 
 def greeting():
     print("Hola")
@@ -107,7 +119,7 @@ def printSolutions(simulator:Simulator):
         print("------------------------------------\n")
         i += 1
 
-if __name__ == '__main__':
+if __name__ == '__mai__':
     from processesGenerator import ProcessesGenerator
 
     batches = ProcessesGenerator.generateRandomProcesses(8, 5)

@@ -85,6 +85,7 @@ class MainWindow():
         self.__simulator.addEventListener(event="onStartSimulator", action=globalTimerThread.start)
         self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showRunningProcess)
         self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
+        self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showProcessesWaiting)
 
         #self.__simulator.simulateProcesses()
         simulatorThread.start()
@@ -94,7 +95,27 @@ class MainWindow():
             self.__globalTimer += 1
             self.__globalTimerLabel.config(text=f"Reloj Global {self.__globalTimer}")
             time.sleep(1)
-    
+
+    def __showProcessesWaiting(self):
+        batchesAmount = self.__simulator.getBatchesAmount()
+        currentBatch = self.__simulator.getBatch(self.__simulator.getCurrentBatchIndex())
+        currentProcessSubindex = self.__simulator.getCurrentProcessSubindex()
+        nextProcessInBatch = None
+
+        if currentProcessSubindex < len(currentBatch) - 1:
+            nextProcessInBatch = currentBatch[currentProcessSubindex + 1]
+        
+        output = ""
+
+        if nextProcessInBatch is not None:
+            output = f"{nextProcessInBatch['ProcessNumber']}. {nextProcessInBatch['Name']}\n"
+            output += f"{nextProcessInBatch['FirstOperand']} {nextProcessInBatch['Operator']} {nextProcessInBatch['SecondOperand']}\n"
+            output += f"TME: {nextProcessInBatch['EMT']}\n\n"
+            output += f"{len(currentBatch) - currentProcessSubindex - 2} procesos pendientes"
+
+        self.__processesWaitingOutput.config(text=output)
+        self.__missingBatchesLabel.config(text=f"# de Lotes pendientes: {batchesAmount - self.__simulator.getCurrentBatchIndex() - 1}")
+
     def __showRunningProcess(self):
         currentProcess = self.__simulator.getCurrentProcess()
         output = f"{currentProcess['ProcessNumber']}. {currentProcess['Name']}\n"
