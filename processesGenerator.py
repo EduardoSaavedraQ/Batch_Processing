@@ -1,11 +1,13 @@
 import random
 
 class ProcessesGenerator():
+    #Listas de nombres y operadores para los procesos
     __names = ["José", "Carlos", "Carolina", "Juán"]
     __operators = ['+', '-', '*', '/']
 
     @staticmethod
-    def generateRandomProcesses(processesQuantity:int, limitPerBatch:int):
+    def generateRandomProcesses(processesQuantity:int, limitPerBatch:int): #Método para generar procesos de forma aleatoria. Se puede usar sin instanciar la clase.
+                                                                        #Se recibe como parámetros la cantidad de procesos totales y los procesos máximos por lote.
         generatedProcesses = []
         processesGeneratedNumber = 0
 
@@ -23,7 +25,7 @@ class ProcessesGenerator():
         
         return ProcessesGenerator.__batchesGenerator(generatedProcesses, limitPerBatch)
     
-    def __batchesGenerator(generatedProcesses:list, limitPerBatch:int):
+    def __batchesGenerator(generatedProcesses:list, limitPerBatch:int): #Método para dividir los procesos generados en lotes.
         processesNumber = len(generatedProcesses)
         batchs = []
         batch = []
@@ -33,17 +35,17 @@ class ProcessesGenerator():
             batch.append(generatedProcesses[position])
             position += 1
 
-            if position % limitPerBatch == 0:
+            if position % limitPerBatch == 0: #Si se llena el lote, se añade a la lista de lotes y se crea uno nuevo.
                 batchs.append(batch)
                 batch = []
         
-        if position % limitPerBatch != 0:
+        if position % limitPerBatch != 0: #Si el lote no se ha llenado, se añade a la lista antes de devolverlo.
             batchs.append(batch)
         
         return batchs
 
     @staticmethod
-    def to_txt(filename:str, batchesList:list):
+    def to_txt(filename:str, batchesList:list): #Generador de txt para los procesos generados. Se puede usar sin instanciar la clase.
         with open(f"{filename}.txt", 'w', encoding='UTF-8') as file:
             batchNumber = 1
             for batch in batchesList:
@@ -56,8 +58,7 @@ class ProcessesGenerator():
                     file.write(output)
                 batchNumber += 1
 
-
-
+####Código para realizar pruebas####
 if __name__ == "__mai__":
     batches = ProcessesGenerator.generateRandomProcesses(8, 5)
     i = 1
