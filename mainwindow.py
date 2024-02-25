@@ -92,6 +92,8 @@ class MainWindow():
         self.__simulator.addEventListener(event="onAppendSolution", action=self.__showSolutions)
         self.__simulator.addEventListener(event="onUpdateEMT", action=self.__showProcessesWaiting)
         self.__simulator.addEventListener(event='onFinishSimulation', action=self.__enableEntryAndButtons)
+        self.__simulator.addEventListener(event='onFinishSimulation', action=lambda:self.__runningProcessOutput.config(text=""))
+
 
         #self.__simulator.simulateProcesses()
         simulatorThread.start()
