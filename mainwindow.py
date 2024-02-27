@@ -89,7 +89,7 @@ class MainWindow():
         #Configuración de widgets
         self.__finishedProcessesLabel = tk.Label(self.__finishedProcessesOArea, text="TERMINADOS", background="#dddddd")
         self.__finishedProcessesOutput = tk.Listbox(self.__finishedProcessesOArea, width=25, height=20)
-        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados", command=self.__printSolutions)
+        self.__getResultsButton = tk.Button(self.__finishedProcessesOArea, text="Obtener resultados", command=self.__printSolutions, state="disabled")
         #Inserción de widgets
         self.__finishedProcessesLabel.pack()
         self.__finishedProcessesOutput.pack()
