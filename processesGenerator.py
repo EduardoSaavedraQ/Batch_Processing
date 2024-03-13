@@ -17,7 +17,7 @@ class ProcessesGenerator():
                 "Name": random.choice(ProcessesGenerator.__names),
                 "FirstOperand": random.randint(0, 10),
                 "Operator": random.choice(ProcessesGenerator.__operators),
-                "SecondOperand": random.randint(0, 10),
+                "SecondOperand": random.randint(1, 10),
                 "EMT": random.randint(5, 12)
             })
 
